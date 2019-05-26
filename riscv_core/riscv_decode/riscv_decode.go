@@ -14,28 +14,23 @@
 	limitations under the License.
 */
 /*
-	riscv_core is the top level of the risc-v core.
+	riscv_decode is used to decode instruction as the RISBUJ format,
+	this will be imported by every instruction family.
 */
-package riscv_core
+package riscv_decode
 
-import (
-	//"fmt"
-	"riscv_core/riscv_i"
-	"riscv_core/riscv_reg"
-)
+import ()
 
-var regfile *riscv_reg.Regfile
+func common_decode(instr uint) (rs1, rs2, rd, funct3, funct7 byte) {
+	rd = byte((instr >> 7) & 0x1f)
+	rs1 = byte((instr >> 15) & 0x1f)
+	rs2 = byte((instr >> 20) & 0x1f)
+	funct3 = byte((instr >> 12) & 0x07)
+	funct7 = byte((instr >> 25) & 0x7f)
+	return
+}
 
-func Init(option string) {
-	regfile = riscv_reg.Init(option)
-	riscv_i_enable := false
-	for _, c := range option {
-		switch c {
-		case 'M':
-			fallthrough
-		case 'm':
-			riscv_i_enable = true
-		}
-	}
-	riscv_i.Init(riscv_i_enable)
+func Rformat(instr uint) (rs1, rs2, rd, funct3, funct7 byte) {
+	rs1, rs2, rd, funct3, funct7 = common_decode(instr)
+	return
 }
