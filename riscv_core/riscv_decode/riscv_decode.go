@@ -21,6 +21,10 @@ package riscv_decode
 
 import ()
 
+func bit(n byte) uint {
+	return 1<<n
+}
+
 func common_decode(instr uint) (rs1, rs2, rd, funct3, funct7 byte) {
 	rd = byte((instr >> 7) & 0x1f)
 	rs1 = byte((instr >> 15) & 0x1f)
@@ -34,3 +38,35 @@ func Rformat(instr uint) (rs1, rs2, rd, funct3, funct7 byte) {
 	rs1, rs2, rd, funct3, funct7 = common_decode(instr)
 	return
 }
+
+func Iformat(instr uint) (rs1, rd, funct3 byte, imm uint) {
+	rs1, _, rd, funct3, _ = common_decode(instr)
+	imm = instr >> 20
+	return
+}
+
+func Sformat(instr uint) (rs1, rs2, funct3 byte, imm uint) {
+	rs1, rs2, _, funct3, _ = common_decode(instr)
+	imm = (instr>>25 << 5) | (instr>>7 & 0x1f)
+	return
+}
+
+func Bformat(instr uint) (rs1, rs2, funct3 byte, imm uint) {
+	rs1, rs2, _, funct3, _ = common_decode(instr)
+	imm = ((instr>>25 & 0x3f)<<5) | (instr>>7 & 0x1e) | (instr&bit(31)>>(31-12)) | (instr&bit(7)<<(11-7))
+	return
+}
+
+func Uformat(instr uint) (rd byte, imm uint) {
+	rd = byte(instr>>7 & 0x1f)
+	imm = instr & 0xfffff000
+	return
+}
+
+func Jformat(instr uint) (rd byte, imm uint) {
+	ins := instr >> 12
+	rd = byte(instr>>7 & 0x1f)
+	imm = (ins&0xff << 12) | (ins&0x100 << 3) | (ins&0x7fe00 >> 8) | (ins>>19 << 20)
+	return
+}
+

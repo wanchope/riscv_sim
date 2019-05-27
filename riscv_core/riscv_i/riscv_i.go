@@ -20,7 +20,7 @@ package riscv_i
 
 import (
 	"errors"
-	"riscv_core/riscv_reg"
+	"riscv/riscv_core/riscv_reg"
 )
 
 var instr_enable bool

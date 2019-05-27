@@ -20,8 +20,8 @@ package riscv_core
 
 import (
 	//"fmt"
-	"riscv_core/riscv_i"
-	"riscv_core/riscv_reg"
+	"riscv/riscv_core/riscv_i"
+	"riscv/riscv_core/riscv_reg"
 )
 
 var regfile *riscv_reg.Regfile
